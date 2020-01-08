@@ -1,0 +1,23 @@
+{
+    "root": "/home/laksh/Desktop/Genei_stuff/Genei Blog/Siamese_BERT_blogpost",
+    "program": "train.py",
+    "git": {
+        "remote": "https://github.com/Genei-Ltd/Siamese_BERT_blogpost.git",
+        "commit": "c100f6f255142352c346e5a11ca7a478f8cc8ddf"
+    },
+    "email": "laksh@genei.io",
+    "startedAt": "2020-01-08T19:55:16.888256",
+    "host": "laksh-XPS-13-9370",
+    "username": "laksh",
+    "executable": "/home/laksh/anaconda3/envs/Siamese_BERT_blogpost/bin/python",
+    "os": "Linux-5.3.0-24-generic-x86_64-with-debian-buster-sid",
+    "python": "3.7.5",
+    "cpu_count": 8,
+    "args": [],
+    "state": "killed",
+    "jobType": null,
+    "mode": "run",
+    "project": "Siamese_SNLI",
+    "heartbeatAt": "2020-01-08T19:55:29.225689",
+    "exitcode": 255
+}

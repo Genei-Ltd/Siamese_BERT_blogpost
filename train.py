@@ -7,6 +7,9 @@ from torchtext import datasets
 
 from transformers import AutoTokenizer
 
+import os
+os.environ['WANDB_API_KEY']='6beb9ef2d63f9b90456e658843c4e65ee59b88a9'
+
 if __name__ == '__main__':
     wandb.init(project='Siamese_SNLI')
 
@@ -35,8 +38,8 @@ if __name__ == '__main__':
     config.gradient_clip_val = 15
     config.warmup_steps = 100
 
-    config.device = 'cpu'
-    config.no_cuda = True
+    config.device = 'cuda'
+    config.no_cuda = False
     ########################################
 
     # DATA LOADING

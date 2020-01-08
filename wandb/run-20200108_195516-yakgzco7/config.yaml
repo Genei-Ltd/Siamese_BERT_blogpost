@@ -1,0 +1,56 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.8.19
+    framework: torch
+    is_jupyter_run: false
+    python_version: 3.7.5
+aggr:
+  desc: null
+  value: mean
+batch_size:
+  desc: null
+  value: 32
+betas:
+  desc: null
+  value:
+  - 0.9
+  - 0.999
+device:
+  desc: null
+  value: cpu
+epochs:
+  desc: null
+  value: 10
+eps:
+  desc: null
+  value: 1.0e-07
+gradient_clip_val:
+  desc: null
+  value: 15
+lr:
+  desc: null
+  value: 0.0001
+model_name:
+  desc: null
+  value: albert-base-v1
+no_cuda:
+  desc: null
+  value: true
+optimizer:
+  desc: null
+  value: RAdam
+val_check_interval:
+  desc: null
+  value: 250
+val_percent_check:
+  desc: null
+  value: 0.3
+warmup_steps:
+  desc: null
+  value: 100
+weight_decay:
+  desc: null
+  value: 1.0e-07
