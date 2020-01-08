@@ -18,7 +18,7 @@ if __name__ == '__main__':
     config = wandb.config
 
     # Model hyperparams
-    config.model_name = 'albert-base-v1'
+    config.model_name = 'distilroberta-base'
     config.aggr = 'mean'
 
     # Training hyperparams
