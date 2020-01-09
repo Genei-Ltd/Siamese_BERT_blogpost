@@ -58,7 +58,7 @@ class LightningWrapper(pl.LightningModule):
 
         return res
 
-    def configure_optimizrs(self):
+    def configure_optimizers(self):
         self.opt = RAdam(self.siamese.parameters(),
                          lr=self.config.lr,
                          betas=self.config.betas,
