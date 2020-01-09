@@ -19,6 +19,8 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--bs', type=int, default=32)
     parser.add_argument('--epochs', type=int, default=5)
+    parser.add_argument('--gpus', type=int, default=1)
+    parser.add_argument('--distributed-backend', type=str, default=None)
     args = parser.parse_args()
 
     wandb.init(project='Siamese_SNLI')
@@ -49,6 +51,8 @@ if __name__ == '__main__':
     config.warmup_steps = 100
 
     config.device = 'cuda'
+    config.gpus = args.gpus # default 1
+    config.distributed_backend = args.distributed_backend
     config.no_cuda = False
     ########################################
 
@@ -90,7 +94,8 @@ if __name__ == '__main__':
                          early_stop_callback=True,
                          default_save_path='.',
                          gradient_clip_val=config.gradient_clip_val,
-                         # gpus=1,
+                         gpus=config.gpus,
+                         distributed_backend=config.distributed_backend,
                          show_progress_bar=False,
                          val_check_interval=config.val_check_interval,
                          val_percent_check=config.val_percent_check,
