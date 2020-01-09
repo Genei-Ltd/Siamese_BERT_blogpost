@@ -11,6 +11,7 @@ import os
 os.environ['WANDB_API_KEY']='6beb9ef2d63f9b90456e658843c4e65ee59b88a9'
 
 import argparse
+from argparse import Namespace
 
 if __name__ == '__main__':
 
@@ -84,7 +85,7 @@ if __name__ == '__main__':
 
     # MODEL FITTING
     ########################################
-    model = LightningWrapper(config=config,  # learning rate etc
+    model = LightningWrapper(config=Namespace(**dict(config)),  # learning rate etc
                              data=(train_iter, dev_iter, test_iter),
                              num_labels=num_labels,
                              )
