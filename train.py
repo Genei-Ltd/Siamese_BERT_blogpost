@@ -10,7 +10,17 @@ from transformers import AutoTokenizer
 import os
 os.environ['WANDB_API_KEY']='6beb9ef2d63f9b90456e658843c4e65ee59b88a9'
 
+import argparse
+
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Siamese BERT')
+    parser.add_argument('--model-name', type=str, default='bert-base-uncased')
+    parser.add_argument('--lr', type=float, default=1e-4)
+    parser.add_argument('--bs', type=int, default=32)
+    parser.add_argument('--epochs', type=int, default=5)
+    args = parser.parse_args()
+
     wandb.init(project='Siamese_SNLI')
 
     # CONFIG
@@ -18,12 +28,12 @@ if __name__ == '__main__':
     config = wandb.config
 
     # Model hyperparams
-    config.model_name = 'distilroberta-base'
+    config.model_name = args.model_name # default is bert-base-uncased
     config.aggr = 'mean'
 
     # Training hyperparams
-    config.batch_size = 32
-    config.epochs = 10
+    config.batch_size = args.bs # default 32
+    config.epochs = args.epochs # default  5
 
     # Validation hyperparams
     config.val_check_interval = 250
@@ -31,7 +41,7 @@ if __name__ == '__main__':
 
     # Optimization Hyperparams
     config.optimizer = 'RAdam'
-    config.lr = 1e-4
+    config.lr = args.lr
     config.betas = (0.9, 0.999)
     config.eps = 1e-07
     config.weight_decay = 1e-7
