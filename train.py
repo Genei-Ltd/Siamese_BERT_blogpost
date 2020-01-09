@@ -80,7 +80,7 @@ if __name__ == '__main__':
     num_labels = len(LABEL.vocab)
 
     train_iter, dev_iter, test_iter = data.BucketIterator.splits(
-        (train, dev, test), batch_size=config.batch_size, device=config.device)
+        (train, dev, test), batch_size=config.batch_size)
     ########################################
 
     # MODEL FITTING
