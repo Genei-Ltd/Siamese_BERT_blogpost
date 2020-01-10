@@ -31,7 +31,6 @@ class Siamese(nn.Module):
                  ):
         super(Siamese, self).__init__()
         self.language_model = AutoModel.from_pretrained(model_name)  # Load language model from HuggingFace
-        self.num_labels = num_labels
         self.aggr = Aggregation(aggr)  # Type of word vector aggregation to generate sentence embeddings
         self.linear = nn.Linear(self.language_model.config.hidden_size * 3, 3)  # Linear layer post concatenation
 

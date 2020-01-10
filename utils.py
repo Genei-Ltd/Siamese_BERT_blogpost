@@ -1,4 +1,7 @@
-def collate(data_list):
+# utils.py
+import torch
+
+def collate_function(data_list):
     """
         data: list of torchtext.examples
     """

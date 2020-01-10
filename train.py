@@ -1,7 +1,11 @@
+from utils import collate_function
+
 import pytorch_lightning as pl
 from wrapper import LightningWrapper
+
 import wandb
 
+from torch.utils.data import DataLoader
 from torchtext import data
 from torchtext import datasets
 
@@ -11,7 +15,6 @@ import os
 os.environ['WANDB_API_KEY']='6beb9ef2d63f9b90456e658843c4e65ee59b88a9'
 
 import argparse
-from argparse import Namespace
 
 if __name__ == '__main__':
 
@@ -51,20 +54,20 @@ if __name__ == '__main__':
     config.gradient_clip_val = 15
     config.warmup_steps = 100
 
-    config.device = 'cuda'
+    # GPU Params
     config.gpus = args.gpus # default 1
     config.distributed_backend = args.distributed_backend
     config.no_cuda = False
+
+    config = argparse.Namespace(**dict(config))
     ########################################
 
     # DATA LOADING
     ########################################
     tokenizer = AutoTokenizer.from_pretrained(config.model_name, do_lower_case=True)
 
-
     def preprocessor(batch):
         return tokenizer.encode(batch, add_special_tokens=True)
-
 
     TEXT = data.Field(
         use_vocab=False,
@@ -76,18 +79,16 @@ if __name__ == '__main__':
 
     train, dev, test = datasets.SNLI.splits(TEXT, LABEL)
 
-    LABEL.build_vocab(train)
-    num_labels = len(LABEL.vocab)
+    train_loader = DataLoader(train, batch_size=config.batch_size, collate_fn=collate_function)
+    dev_loader = DataLoader(dev, batch_size=config.batch_size, collate_fn=collate_function)
+    test_loader = DataLoader(test, batch_size=config.batch_size, collate_fn=collate_function)
 
-    train_iter, dev_iter, test_iter = data.BucketIterator.splits(
-        (train, dev, test), batch_size=config.batch_size)
     ########################################
 
     # MODEL FITTING
     ########################################
-    model = LightningWrapper(config=Namespace(**dict(config)),  # learning rate etc
-                             data=(train_iter, dev_iter, test_iter),
-                             num_labels=num_labels,
+    model = LightningWrapper(config=config,  # learning rate etc
+                             data=(train_loader, dev_loader, test_loader) # data
                              )
 
     trainer = pl.Trainer(logger=False,

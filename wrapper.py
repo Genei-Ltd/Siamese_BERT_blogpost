@@ -21,29 +21,30 @@ def get_linear_warmup_scheduler(optimizer, num_warmup_steps, last_epoch=-1):
 
 class LightningWrapper(pl.LightningModule):
 
-    def __init__(self, data, num_labels, config):
+    def __init__(self, data, config):
         super(LightningWrapper, self).__init__()
         self.config = config
-        self.siamese = Siamese(model_name=config.model_name,
-                               num_labels=num_labels,
-                               device=config.device)
+        self.siamese = Siamese(model_name=config.model_name)
         self.loss = nn.CrossEntropyLoss(reduction='mean')
         self.current_val_loss = 0.
-        self.train_iter, self.dev_iter, self.test_iter = data
+        self.train_loader, self.dev_loader, self.test_loader = data
 
     def forward(self, batch):
-        return self.siamese(batch)
+        premise, hypothesis, label = batch
+        return self.siamese(premise, hypothesis)
 
     def training_step(self, batch, batch_nb):
+        _, _, label = batch
         out = self.forward(batch)
-        return {'loss': self.loss(out, batch.label)}
+        return {'loss': self.loss(out, label)}
 
     def validation_step(self, batch, batch_nb):
+        _, _, label = batch
         out = self.forward(batch)
         winners = out.argmax(dim=-1)
-        correct = (winners == batch.label)
+        correct = (winners == label)
         accuracy = correct.sum().float() / float(correct.size(0))
-        return {'val_loss': self.loss(out, batch.label),
+        return {'val_loss': self.loss(out, label),
                 'val_accuracy': accuracy}
 
     def validation_end(self, outputs):
@@ -89,12 +90,12 @@ class LightningWrapper(pl.LightningModule):
 
     @pl.data_loader
     def train_dataloader(self):
-        return self.train_iter
+        return self.train_loader
 
     @pl.data_loader
     def val_dataloader(self):
-        return self.dev_iter
+        return self.dev_loader
 
     @pl.data_loader
     def test_dataloader(self):
-        return self.test_iter
+        return self.test_loader
