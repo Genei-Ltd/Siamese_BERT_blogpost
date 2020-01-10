@@ -27,28 +27,24 @@ class Siamese(nn.Module):
     """
     def __init__(self,
                  model_name='distilbert-base-uncased',
-                 num_labels=4,
-                 aggr='mean',
-                 device='cuda'):
+                 aggr='mean'
+                 ):
         super(Siamese, self).__init__()
         self.language_model = AutoModel.from_pretrained(model_name)  # Load language model from HuggingFace
         self.num_labels = num_labels
         self.aggr = Aggregation(aggr)  # Type of word vector aggregation to generate sentence embeddings
-        self.device = device
-        self.linear = nn.Linear(self.language_model.config.hidden_size * 3,
-                                self.num_labels)  # Linear layer post concatenation
-        self.to(device)  # Send entire model to GPU if available
+        self.linear = nn.Linear(self.language_model.config.hidden_size * 3, 3)  # Linear layer post concatenation
 
-    def forward(self, batch):
-        premise = batch.premise
-        hypothesis = batch.hypothesis
+    def forward(self, premise, hypothesis):
 
-        premise = self.language_model(premise)[0]
-        premise = self.aggr(premise)
+        encoded_premise = self.language_model(premise)[0]
+        aggregated_premise = self.aggr(encoded_premise)
 
-        hypothesis = self.language_model(hypothesis)[0]
-        hypothesis = self.aggr(hypothesis)
+        encoded_hypothesis = self.language_model(hypothesis)[0]
+        aggregated_hypothesis = self.aggr(encoded_hypothesis)
 
-        concatenation = torch.cat([premise, hypothesis, torch.abs(premise - hypothesis)], dim=1)
+        difference = torch.abs(aggregated_premise - aggregated_hypothesis)
+
+        concatenation = torch.cat([aggregated_premise, aggregated_hypothesis, difference], dim=1)
 
         return self.linear(concatenation)  # return logits
