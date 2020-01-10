@@ -85,9 +85,23 @@ if __name__ == '__main__':
 
     train, dev, test = datasets.SNLI.splits(TEXT, LABEL)
 
-    train_loader = DataLoader(train, batch_size=config.batch_size, collate_fn=collate_function, pin_memory=True)
-    dev_loader = DataLoader(dev, batch_size=config.batch_size, collate_fn=collate_function, pin_memory=True)
-    test_loader = DataLoader(test, batch_size=config.batch_size, collate_fn=collate_function, pin_memory=True)
+    train_loader = DataLoader(train, 
+        batch_size=config.batch_size, 
+        collate_fn=collate_function, 
+        num_workers=4,
+        pin_memory=True)
+    
+    dev_loader = DataLoader(dev, 
+        batch_size=config.batch_size, 
+        collate_fn=collate_function, 
+        num_workers=4,
+        pin_memory=True)
+
+    test_loader = DataLoader(test, 
+        batch_size=config.batch_size, 
+        collate_fn=collate_function, 
+        num_workers=4,
+        pin_memory=True)
 
     ########################################
 
