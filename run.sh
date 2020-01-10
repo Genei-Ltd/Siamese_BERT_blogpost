@@ -1,6 +1,8 @@
 #!/bin/bash
 
 echo "hello world"
-pip install -r requirements.txt
+#pip install -r requirements.txt
 
-python train.py
+#git clone https://github.com/NVIDIA/apex
+#pip install -v --no-cache-dir --global_option="--cpp_ext" --global-option="--cuda_ext" ./apex
+
