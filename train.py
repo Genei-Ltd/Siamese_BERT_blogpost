@@ -25,6 +25,8 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=5)
     parser.add_argument('--gpus', type=int, default=1)
     parser.add_argument('--distributed-backend', type=str, default=None)
+    parser.add_argument('--use-amp', type=bool, default=True)
+    parser.add_argument('--amp-level', type=str, default='O2')
     args = parser.parse_args()
 
     wandb.init(project='Siamese_SNLI')
@@ -58,6 +60,10 @@ if __name__ == '__main__':
     config.gpus = args.gpus # default 1
     config.distributed_backend = args.distributed_backend
     config.no_cuda = False
+
+    # 16-bit precision training
+    config.use_amp = args.use_amp
+    config.amp_level = args.amp_level
 
     config = argparse.Namespace(**dict(config))
     ########################################
@@ -98,6 +104,8 @@ if __name__ == '__main__':
                          gradient_clip_val=config.gradient_clip_val,
                          gpus=config.gpus,
                          distributed_backend=config.distributed_backend,
+                         use_amp=config.use_amp,
+                         amp_level=config.amp_level,
                          show_progress_bar=False,
                          val_check_interval=config.val_check_interval,
                          val_percent_check=config.val_percent_check,
